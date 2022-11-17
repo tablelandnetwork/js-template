@@ -14,6 +14,7 @@ describe("index", function () {
     signer = wallet.connect(provider);
   });
   test("update", async function () {
+    this.timeout(5000);
     const sdk = connect({ signer, chain: "local-tableland" });
     const { hash } = await sdk.write("update healthbot_31337_1 set counter=1;");
     const txnReceipt = await sdk.receipt(hash);
@@ -22,6 +23,7 @@ describe("index", function () {
   });
 
   test("query", async function () {
+    this.timeout(5000);
     const sdk = connect({ signer, chain: "local-tableland" });
     const { rows } = await sdk.read("select * from healthbot_31337_1;");
 
