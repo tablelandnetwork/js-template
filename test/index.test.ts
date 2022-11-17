@@ -1,32 +1,33 @@
-import assert from "assert";
+import { strictEqual, deepStrictEqual } from "assert";
 import { describe, test } from "mocha";
 import { getAccounts } from "@tableland/local";
-import { Wallet, providers, Signer } from "ethers";
-import { connect } from "@tableland/sdk";
+import { ChainName, connect } from "@tableland/sdk";
 
 describe("index", function () {
-  let signer: Signer;
-  this.beforeAll(async function () {
-    const [account] = getAccounts();
-    const privateKey = account.privateKey.slice(2);
-    const wallet = new Wallet(privateKey);
-    const provider = new providers.JsonRpcProvider(); // Defaults to localhost
-    signer = wallet.connect(provider);
-  });
-  test("update", async function () {
-    this.timeout(5000);
-    const sdk = connect({ signer, chain: "local-tableland" });
-    const { hash } = await sdk.write("update healthbot_31337_1 set counter=1;");
-    const txnReceipt = await sdk.receipt(hash);
+  const chain: ChainName = "local-tableland";
+  // Note that we're using the second account here
+  const [, signer] = getAccounts();
+  const sdk = connect({ signer, chain });
 
-    assert.strictEqual(txnReceipt?.chainId, 31337);
+  test("create", async function () {
+    const { name } = await sdk.create("counter integer", { prefix: "table" });
+    strictEqual(name, "table_31337_2");
+  });
+
+  test("insert", async function () {
+    const { hash } = await sdk.write("insert into table_31337_2 values (1);");
+    const txnReceipt = await sdk.receipt(hash);
+    strictEqual(txnReceipt?.chainId, 31337);
+  });
+
+  test("update", async function () {
+    const { hash } = await sdk.write("update table_31337_2 set counter=2;");
+    const txnReceipt = await sdk.receipt(hash);
+    strictEqual(txnReceipt?.chainId, 31337);
   });
 
   test("query", async function () {
-    this.timeout(5000);
-    const sdk = connect({ signer, chain: "local-tableland" });
-    const { rows } = await sdk.read("select * from healthbot_31337_1;");
-
-    assert.deepStrictEqual(rows[0], [1]);
+    const { rows } = await sdk.read("select * from table_31337_2;");
+    deepStrictEqual(rows[0], [2]);
   });
 });
