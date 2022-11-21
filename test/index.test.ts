@@ -1,13 +1,11 @@
 import { strictEqual, deepStrictEqual } from "assert";
 import { describe, test } from "mocha";
-import { getAccounts } from "@tableland/local";
-import { ChainName, connect } from "@tableland/sdk";
+import { getAccounts, getConnection } from "@tableland/local";
 
 describe("index", function () {
-  const chain: ChainName = "local-tableland";
   // Note that we're using the second account here
   const [, signer] = getAccounts();
-  const sdk = connect({ signer, chain });
+  const sdk = getConnection(signer);
 
   test("create", async function () {
     const { name } = await sdk.create("counter integer", { prefix: "table" });
