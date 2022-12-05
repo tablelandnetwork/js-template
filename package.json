@@ -29,7 +29,7 @@
     "format": "npm run prettier:fix && npm run lint:fix",
     "prepublishOnly": "npm run build",
     "test": "mocha",
-    "coverage": "c8 mocha",
+    "coverage": "c8 mocha --exit",
     "clean": "rm -rf dist",
     "build": "npx tsc"
   },
