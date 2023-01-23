@@ -58,6 +58,6 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@tableland/sdk": "^3.1.5"
+    "@tableland/sdk": "^3.1.7"
   }
 }
