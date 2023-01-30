@@ -41,7 +41,7 @@
   ],
   "license": "MIT AND Apache-2.0",
   "devDependencies": {
-    "@tableland/local": "^0.0.4",
+    "@tableland/local": "^0.0.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
