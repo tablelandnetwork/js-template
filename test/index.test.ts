@@ -11,17 +11,21 @@ describe("index", function () {
   test("create", async function () {
     const { meta } = await db
       .prepare("CREATE TABLE my_table (counter integer);")
-      .all();
+      .run();
     strictEqual(meta.txn?.name, "my_table_31337_2");
   });
 
   test("insert", async function () {
     const { meta } = await db
       .prepare("insert into my_table_31337_2 values (1);")
-      .all();
+      .run();
 
-    strictEqual(typeof meta.txn?.transactionHash, "string");
-    strictEqual(typeof meta.txn?.chainId, "number");
+    if (typeof meta.txn?.transactionHash !== "string") {
+      throw new Error("something unexpected happened during insert");
+    }
+    if (typeof meta.txn?.chainId !== "number") {
+      throw new Error("something unexpected happened during insert");
+    }
 
     const txnReceipt = await validator.receiptByTransactionHash({
       transactionHash: meta.txn?.transactionHash,
@@ -33,7 +37,11 @@ describe("index", function () {
   test("update", async function () {
     const { meta } = await db
       .prepare("update my_table_31337_2 set counter=2;")
-      .all();
+      .run();
+
+    strictEqual(typeof meta.txn?.transactionHash, "string");
+    strictEqual(typeof meta.txn?.chainId, "number");
+
     const txnReceipt = await validator.receiptByTransactionHash({
       transactionHash: meta.txn?.transactionHash as string,
       chainId: meta.txn?.chainId as number,
