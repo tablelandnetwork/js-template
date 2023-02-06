@@ -2,6 +2,7 @@ import { strictEqual, deepStrictEqual } from "assert";
 import { describe, test } from "mocha";
 import { getAccounts, getDatabase, getValidator } from "@tableland/local";
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 describe("index", function () {
   // Note that we're using the second account here
   const [, signer] = getAccounts();
@@ -20,16 +21,12 @@ describe("index", function () {
       .prepare("insert into my_table_31337_2 values (1);")
       .run();
 
-    if (typeof meta.txn?.transactionHash !== "string") {
-      throw new Error("something unexpected happened during insert");
-    }
-    if (typeof meta.txn?.chainId !== "number") {
-      throw new Error("something unexpected happened during insert");
-    }
+    strictEqual(typeof meta.txn?.transactionHash, "string");
+    strictEqual(typeof meta.txn?.chainId, "number");
 
     const txnReceipt = await validator.receiptByTransactionHash({
-      transactionHash: meta.txn?.transactionHash,
-      chainId: meta.txn?.chainId,
+      transactionHash: meta.txn!.transactionHash,
+      chainId: meta.txn!.chainId,
     });
     strictEqual(txnReceipt?.chainId, 31337);
   });
@@ -43,8 +40,8 @@ describe("index", function () {
     strictEqual(typeof meta.txn?.chainId, "number");
 
     const txnReceipt = await validator.receiptByTransactionHash({
-      transactionHash: meta.txn?.transactionHash as string,
-      chainId: meta.txn?.chainId as number,
+      transactionHash: meta.txn!.transactionHash,
+      chainId: meta.txn!.chainId,
     });
     strictEqual(txnReceipt?.chainId, 31337);
   });
