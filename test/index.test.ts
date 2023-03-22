@@ -1,4 +1,4 @@
-import { strictEqual, deepStrictEqual } from "assert";
+import { strictEqual, notEqual, deepStrictEqual } from "assert";
 import { describe, test } from "mocha";
 import { getAccounts, getDatabase, getValidator } from "@tableland/local";
 
@@ -21,12 +21,15 @@ describe("index", function () {
       .prepare("insert into my_table_31337_2 values (1);")
       .run();
 
-    strictEqual(typeof meta.txn?.transactionHash, "string");
-    strictEqual(typeof meta.txn?.chainId, "number");
+    notEqual(meta.txn, null);
+    notEqual(meta.txn, undefined);
+
+    strictEqual(typeof meta.txn.transactionHash, "string");
+    strictEqual(typeof meta.txn.chainId, "number");
 
     const txnReceipt = await validator.receiptByTransactionHash({
-      transactionHash: meta.txn!.transactionHash,
-      chainId: meta.txn!.chainId,
+      transactionHash: meta.txn.transactionHash,
+      chainId: meta.txn.chainId,
     });
     strictEqual(txnReceipt?.chainId, 31337);
   });
