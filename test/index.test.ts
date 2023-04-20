@@ -24,12 +24,12 @@ describe("index", function () {
     notEqual(meta.txn, null);
     notEqual(meta.txn, undefined);
 
-    strictEqual(typeof meta.txn.transactionHash, "string");
-    strictEqual(typeof meta.txn.chainId, "number");
+    strictEqual(typeof meta.txn?.transactionHash, "string");
+    strictEqual(typeof meta.txn?.chainId, "number");
 
     const txnReceipt = await validator.receiptByTransactionHash({
-      transactionHash: meta.txn.transactionHash,
-      chainId: meta.txn.chainId,
+      transactionHash: meta.txn!.transactionHash,
+      chainId: meta.txn!.chainId,
     });
     strictEqual(txnReceipt?.chainId, 31337);
   });
