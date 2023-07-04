@@ -4,6 +4,8 @@
     "module": "ES2022",
     "lib": ["DOM", "ES2020"],
     "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
     "importHelpers": false,
     "moduleResolution": "Node",
     "esModuleInterop": true,
