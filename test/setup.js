@@ -6,7 +6,7 @@ const lt = new LocalTableland({ silent: true });
 
 // Set up before and after hooks to start and stop the instance
 before(async function () {
-  this.timeout(15000);
+  this.timeout(30000);
   await lt.start();
 });
 
